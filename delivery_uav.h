@@ -11,7 +11,7 @@ struct WayPoint {
 
 class DeliveryUAV {
 public:
-  DeliveryUAV(double speed = 2.0, double wait_time = 10.0);
+  DeliveryUAV(double speed, double wait_time);
   int solveCase(const std::string& input_file_name, const std::string& output_file_name);
 
 private:

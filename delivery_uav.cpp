@@ -130,7 +130,8 @@ int DeliveryUAV::solveCase(
   // ----------------------
   // Result Output Section
   // ----------------------
-  output_file << std::fixed << std::setprecision(3) << result << '\n';
+  output_file << "Minimum Time: " << std::fixed << std::setprecision(3) << result << '\n';
+  std::cout << "Minimum Time: " << std::fixed << std::setprecision(3) << result << '\n';
 
   // -------------------
   // Resource Cleanup

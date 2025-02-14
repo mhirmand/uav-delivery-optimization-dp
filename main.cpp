@@ -42,7 +42,6 @@ Config parse_arguments(int argc, char* argv[]) {
  * 3. Initializes the UAV and finds the optimal path's time for the given case:
  * 4. Prints out the results in the output file.
  */
-
 int main(int argc, char* argv[]) {
 
   Config cfg = parse_arguments(argc, argv);

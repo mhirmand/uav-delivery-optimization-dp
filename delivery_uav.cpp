@@ -1,4 +1,4 @@
-#include "delivery_uav.h"
+﻿#include "delivery_uav.h"
 #include <algorithm>
 #include <cmath>
 #include <iomanip>
@@ -7,10 +7,38 @@
 
 WayPoint::WayPoint(double x_, double y_, double p_) : x(x_), y(y_), penalty(p_) {}
 
-DeliveryUAV::DeliveryUAV(
-  double speed, double wait_time) :
-	uav_speed_(speed), wait_time_(wait_time) {}
-
+/**
+ * @brief Constructs a DeliveryUAV instance with specified movement parameters
+ *
+ * Initializes the UAV's operational characteristics that remain constant
+ * across all test cases. These parameters fundamentally affect all time calculations
+ * in the path optimization algorithm.
+ *
+ * @param speed     Cruising speed of the UAV in meters/second (m/s)
+ *                 - Must be > 0 (undefined behavior for zero/negative values)
+ *                 - Typical commercial drone speeds: 10-25 m/s
+ *                 - Affects all travel time calculations between waypoints
+ *
+ * @param wait_time Mandatory stop duration at each waypoint in seconds
+ *                 - Must be ≥ 0 (0 = no stopping required)
+ *                 - Includes package delivery and system checks
+ *                 - Applied to ALL visited waypoints including terminal
+ *
+ * Example usage:
+ * @code
+ * DeliveryUAV heavyPayloadDrone(5.0, 15.0);  // Slow speed, long setup time
+ * DeliveryUAV racingDrone(25.0, 2.5);        // Fast speed, quick stops
+ * @endcode
+ */
+DeliveryUAV::DeliveryUAV(double speed, double wait_time)
+  : uav_speed_(speed),      // Initialized first - critical for calculations
+  wait_time_(wait_time)   // Directly affects all waypoint time costs
+{
+  // Note: While not explicitly validated here, these values should be:
+  // - speed > 0 (prevents division-by-zero in time calculations)
+  // - wait_time >= 0 (negative wait times are non-physical)
+  // Caller responsibility to ensure valid parameters
+}
 int DeliveryUAV::solveCase(
   const std::string& input_file_name, 
   const std::string& output_file_name) 

@@ -20,7 +20,7 @@ WayPoint::WayPoint(double x_, double y_, double p_) : x(x_), y(y_), penalty(p_) 
  *                 - Affects all travel time calculations between waypoints
  *
  * @param wait_time Mandatory stop duration at each waypoint in seconds
- *                 - Must be ≥ 0 (0 = no stopping required)
+ *                 - Must be >= 0 (0 = no stopping required)
  *                 - Includes package delivery and system checks
  *                 - Applied to ALL visited waypoints including terminal
  *
@@ -39,12 +39,38 @@ DeliveryUAV::DeliveryUAV(double speed, double wait_time)
   // - wait_time >= 0 (negative wait times are non-physical)
   // Caller responsibility to ensure valid parameters
 }
-int DeliveryUAV::solveCase(
-  const std::string& input_file_name, 
-  const std::string& output_file_name) 
-{
 
-	// open input and output files
+
+/**
+ * @brief Solves a single case defined in a given input file and writes solution to output file
+ *
+ * This function handles the complete workflow for a test case:
+ * 1. File I/O initialization and validation
+ * 2. Input data parsing and validation
+ * 3. Data structure preparation
+ * 4. Penalty precomputation
+ * 5. Core algorithm execution
+ * 6. Result formatting and output
+ *
+ * @param input_file_name Path to input file containing single test case data
+ * @param output_file_name Path to output file for writing results
+ * @return int Status code: 0 for success, 1 for errors
+ *
+ * @throws Does not throw exceptions but writes errors to cerr
+ *
+ * File Format Requirements:
+ * - First line: Number of waypoints (N ≥ 0)
+ * - Next 2 lines: Start coordinates and Terminal coordinates
+ * - N lines: Waypoint data (X, Y, Penalty)
+ * - Final line: 0 (end marker)
+ */
+int DeliveryUAV::solveCase(
+  const std::string& input_file_name,
+  const std::string& output_file_name)
+{
+  // ---------------------------
+  // File Initialization Section
+  // ---------------------------
   std::ifstream input_file(input_file_name);
   if (!input_file.is_open()) {
     std::cerr << "Error opening input file: " << input_file_name << '\n';
@@ -54,51 +80,75 @@ int DeliveryUAV::solveCase(
   std::ofstream output_file(output_file_name);
   if (!output_file.is_open()) {
     std::cerr << "Error opening output file: " << output_file_name << '\n';
-    input_file.close();
+    input_file.close();  // Cleanup already opened input file
     return 1;
   }
 
-  // get number of waypoints
+  // -------------------------
+  // Input Validation Section
+  // -------------------------
   int n = 0;
   input_file >> n;
-	if (n < 0) {
-		std::cerr << "Invalid test case format. Expected a positive number of waypoints.\n";
-		return 1;
-	}
+  if (n < 0) {
+    std::cerr << "Invalid test case format. Number of waypoints ("
+      << n << ") must be non-negative.\n";
+    return 1;
+  }
 
-	// get start and terminal point coordinates
+  // ----------------------------------
+  // Waypoint Data Loading Section
+  // ----------------------------------
   double start_x, start_y, term_x, term_y;
   input_file >> start_x >> start_y >> term_x >> term_y;
 
-	// initiate waypoints vector
+  // Initialize waypoints with start and terminal points
   std::vector<WayPoint> waypoints;
-  waypoints.reserve(n + 2);
-  waypoints.emplace_back(start_x, start_y, 0.0); // Start point
+  waypoints.reserve(n + 2);  // Preallocate for N + start + terminal
+  waypoints.emplace_back(start_x, start_y, 0.0);  // Start point (index 0)
 
+  // Load N waypoints between start and terminal
   for (int i = 0; i < n; ++i) {
     double x, y, p;
     input_file >> x >> y >> p;
-    waypoints.emplace_back(x, y, p);
+    waypoints.emplace_back(x, y, p);  // Main waypoints (indices 1..N)
   }
-  waypoints.emplace_back(term_x, term_y, 0.0); // Terminal point
+  waypoints.emplace_back(term_x, term_y, 0.0);  // Terminal point (index N+1)
 
-  // Precompute prefix sums of penalties
-  std::vector<double> prefix(n + 2, 0.0);
+  // Verify end of test case marker
+  int end_marker;
+  input_file >> end_marker;
+  if (end_marker != 0) {
+    std::cerr << "Invalid test case format. Missing terminal 0 marker.\n";
+    return 1;
+  }
+
+  // -------------------------------
+  // Penalty Precomputation Section
+  // -------------------------------
+  std::vector<double> prefix(n + 2, 0.0);  // prefix[0] = 0 (start point)
   for (int i = 1; i <= n; ++i) {
     prefix[i] = prefix[i - 1] + waypoints[i].penalty;
   }
-  prefix[n + 1] = prefix[n]; // Terminal has no penalty
+  prefix[n + 1] = prefix[n];  // Terminal inherits previous sum (no penalty)
 
+  // --------------------------
+  // Core Algorithm Execution
+  // --------------------------
   const double result = DeliveryUAV::solve(waypoints, prefix);
+
+  // ----------------------
+  // Result Output Section
+  // ----------------------
   output_file << std::fixed << std::setprecision(3) << result << '\n';
 
-	// close input and output files
+  // -------------------
+  // Resource Cleanup
+  // -------------------
   input_file.close();
   output_file.close();
 
   return 0;
 }
-
 double DeliveryUAV::solve(
   const std::vector<WayPoint>& waypoints,
   const std::vector<double>& prefix)

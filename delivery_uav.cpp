@@ -73,14 +73,14 @@ int DeliveryUAV::solveCase(
   std::ifstream input_file(input_file_name);
   if (!input_file.is_open()) {
     std::cerr << "Error opening input file: " << input_file_name << '\n';
-    return 1;
+    return EXIT_FAILURE;
   }
 
   std::ofstream output_file(output_file_name);
   if (!output_file.is_open()) {
     std::cerr << "Error opening output file: " << output_file_name << '\n';
     input_file.close();  // Cleanup already opened input file
-    return 1;
+    return EXIT_FAILURE;
   }
 
   // -------------------------
@@ -89,9 +89,9 @@ int DeliveryUAV::solveCase(
   int n = 0;
   input_file >> n;
   if (n < 0) {
-    std::cerr << "Invalid test case format. Number of waypoints ("
+    std::cerr << "Invalid input format. Number of waypoints ("
       << n << ") must be non-negative.\n";
-    return 1;
+    return EXIT_FAILURE;
   }
 
   // ----------------------------------
@@ -112,14 +112,6 @@ int DeliveryUAV::solveCase(
     waypoints.emplace_back(x, y, p);  // Main waypoints (indices 1..N)
   }
   waypoints.emplace_back(term_x, term_y, 0.0);  // Terminal point (index N+1)
-
-  // Verify end of test case marker
-  int end_marker;
-  input_file >> end_marker;
-  if (end_marker != 0) {
-    std::cerr << "Invalid test case format. Missing terminal 0 marker.\n";
-    return 1;
-  }
 
   // -------------------------------
   // Penalty Precomputation Section
@@ -146,7 +138,7 @@ int DeliveryUAV::solveCase(
   input_file.close();
   output_file.close();
 
-  return 0;
+  return EXIT_SUCCESS;
 }
 
 

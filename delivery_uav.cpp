@@ -160,7 +160,7 @@ int DeliveryUAV::solveCase(
  * The algorithm considers all possible previous waypoints when calculating
  * the minimum time to reach each subsequent waypoint.
  *
- * Time Complexity: O(N²), where N is the number of waypoints
+ * Time Complexity: O(N^2), where N is the number of waypoints
  *
  * @param waypoints Vector containing all waypoints in order:
  *                  [start, wp1, wp2..., terminal]
@@ -174,7 +174,7 @@ double DeliveryUAV::solve(
   const std::vector<double>& prefix)
 {
   // Total points includes all waypoints except terminal in initial calculation
-  const int total_points = waypoints.size() - 1;  // waypoints.size() = N + 2 (start + N + terminal)
+  const int total_points = (int)waypoints.size() - 1;  // waypoints.size() = N + 2 (start + N + terminal)
 
   // DP array where dp[i] represents minimum time to reach waypoint[i]
   std::vector<double> dp(total_points + 1, std::numeric_limits<double>::infinity());

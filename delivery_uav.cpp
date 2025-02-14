@@ -62,7 +62,6 @@ DeliveryUAV::DeliveryUAV(double speed, double wait_time)
  * - First line: Number of waypoints (N ≥ 0)
  * - Next 2 lines: Start coordinates and Terminal coordinates
  * - N lines: Waypoint data (X, Y, Penalty)
- * - Final line: 0 (end marker)
  */
 int DeliveryUAV::solveCase(
   const std::string& input_file_name,

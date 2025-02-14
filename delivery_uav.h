@@ -17,6 +17,6 @@ public:
 private:
   double uav_speed_;
   double wait_time_;
-  double solve(const std::vector<WayPoint>& waypoints, const std::vector<double>& prefix); 
+  double solve(const std::vector<WayPoint>& waypoints, const std::vector<double>& prefix, std::vector<int>& path);
 
 };

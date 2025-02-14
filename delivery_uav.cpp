@@ -125,13 +125,18 @@ int DeliveryUAV::solveCase(
   // --------------------------
   // Core Algorithm Execution
   // --------------------------
-  const double result = DeliveryUAV::solve(waypoints, prefix);
+  std::vector<int> optimal_path;
+  const double result = DeliveryUAV::solve(waypoints, prefix, optimal_path);
 
   // ----------------------
   // Result Output Section
   // ----------------------
-  output_file << "Minimum Time: " << std::fixed << std::setprecision(3) << result << '\n';
-  std::cout << "Minimum Time: " << std::fixed << std::setprecision(3) << result << '\n';
+  output_file << "Minimum UAV time: " << std::fixed << std::setprecision(3) << result << '\n';
+  output_file << "Optimal waypoint indicies: ";
+  for (int idx : optimal_path) {
+    output_file << idx << " ";
+  }
+  output_file << "\n";
 
   // -------------------
   // Resource Cleanup
@@ -158,12 +163,14 @@ int DeliveryUAV::solveCase(
  *                  [start, wp1, wp2..., terminal]
  * @param prefix    Prefix sum array where prefix[i] represents the sum of
  *                  penalties from waypoints[1] to waypoints[i]
+ * @param path      Output vector storing indices of visited (optimal) waypoints in order
  * @return double   Minimal total time in seconds to complete the course,
  *                  rounded to 3 decimal places in the output
  */
 double DeliveryUAV::solve(
   const std::vector<WayPoint>& waypoints,
-  const std::vector<double>& prefix)
+  const std::vector<double>& prefix,
+  std::vector<int>& path)
 {
   // Total points includes all waypoints except terminal in initial calculation
   const int total_points = (int)waypoints.size() - 1;  // waypoints.size() = N + 2 (start + N + terminal)
@@ -172,10 +179,14 @@ double DeliveryUAV::solve(
   std::vector<double> dp(total_points + 1, std::numeric_limits<double>::infinity());
   dp[0] = 0.0;  // Base case: start point requires no initial time
 
+  // vector to track best previous points for path reconstruction
+  std::vector<int> prev_waypoint(total_points + 1, -1);
+
   // Compute optimal path for each subsequent waypoint
   for (int i = 1; i <= total_points; ++i) {
     double min_time = std::numeric_limits<double>::max();
 
+    int bestPrev = -1;
     // Consider all possible previous waypoints j that could precede i
     for (int j = 0; j < i; ++j) {
       // Calculate straight-line distance between waypoints j and i
@@ -189,12 +200,27 @@ double DeliveryUAV::solve(
       const double time_candidate = dp[j] + (distance / uav_speed_) + sum_pen;
 
       // Track minimum time across all possible j positions
-      min_time = std::min(min_time, time_candidate);
+      // min_time = std::min(min_time, time_candidate);
+      if (time_candidate < min_time) {
+        min_time = time_candidate;
+        bestPrev = j;
+      }
     }
 
     // Add mandatory wait time at current waypoint (including terminal)
     dp[i] = min_time + wait_time_;
+    prev_waypoint[i] = bestPrev;
   }
+
+  // Reconstruct path
+  path.clear();
+  int current = total_points; // Start from terminal
+  while (current != 0) {
+    path.push_back(current);
+    current = prev_waypoint[current];
+  }
+  path.push_back(0); // Include start point
+  std::reverse(path.begin(), path.end());
 
   // Final result is the minimal time to reach terminal point (last element)
   return dp.back();

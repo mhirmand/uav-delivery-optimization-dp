@@ -149,6 +149,26 @@ int DeliveryUAV::solveCase(
 
   return 0;
 }
+
+
+/**
+ * @brief Computes the minimal time required for the UAV to complete the course
+ *        using dynamic programming with penalty optimization.
+ *
+ * This function uses a bottom-up dynamic programming approach to determine
+ * the optimal path that minimizes total time (travel + penalties + wait times).
+ * The algorithm considers all possible previous waypoints when calculating
+ * the minimum time to reach each subsequent waypoint.
+ *
+ * Time Complexity: O(N²), where N is the number of waypoints
+ *
+ * @param waypoints Vector containing all waypoints in order:
+ *                  [start, wp1, wp2..., terminal]
+ * @param prefix    Prefix sum array where prefix[i] represents the sum of
+ *                  penalties from waypoints[1] to waypoints[i]
+ * @return double   Minimal total time in seconds to complete the course,
+ *                  rounded to 3 decimal places in the output
+ */
 double DeliveryUAV::solve(
   const std::vector<WayPoint>& waypoints,
   const std::vector<double>& prefix)

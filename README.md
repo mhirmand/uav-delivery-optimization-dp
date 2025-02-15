@@ -5,7 +5,7 @@ This repository contains a C++ implementation for the optimization of a delivery
 ## Table of Contents
 
 - [Overview](#Problem-Overview)
-- [Algorithm and Time Complexity Analysis](#Algorithm-and-Time-Complexity-Analysis)
+- [Algorithm and Time Complexity](#Algorithm-and-Time-Complexity-Analysis)
 - [Usage](#Usage)
 - [Examples](#Examples)
 
@@ -27,7 +27,7 @@ manoeuvring to them. Given a description of a course, the goal is to determine U
 ### Objective
 Implement a C++ solution to compute the minimal total time and the optimal path for each test case. The solution should be able to solve problems with thousands of waypoints within a reasonable time.
 
-## Algorithm and Time Complexity Analysis
+## Algorithm and Time Complexity
 The general solution strategy is to use dynamic programming to compute the minimal total time by evaluating all possible paths from the start to each waypoint, storing intermediate results to avoid redundant calculations, and backtracking to reconstruct the optimal path.
 
 - **Without Dynamic Programming (DP)**:  

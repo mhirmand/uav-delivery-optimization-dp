@@ -4,12 +4,10 @@ This repository contains a C++ implementation for the optimization of a delivery
 
 ## Table of Contents
 
-- [Overview](#overview)
-- [Dataset](#dataset)
-- [Architecture](#architecture)
-- [Build Instructions](#build-instructions)
-- [Command-Line Arguments](#command-line-arguments)
-- [Results](#results)
+- [Overview](#Problem-Overview)
+- [Algorithm and Time Complexity Analysis](#Algorithm-and-Time-Complexity-Analysis)
+- [Usage](#Usage)
+- [Examples](#Examples)
 
 ## Problem Overview
 A delivery UAV must navigate a large area, visiting ordered waypoints to deliver goods. The UAV starts at a given starting point (e.g., (0, 0)) and must end at a given end point (e.g., (100, 100)). Each waypoint has a penalty for being skipped to reflect 
@@ -33,10 +31,10 @@ Implement a C++ solution to compute the minimal total time and the optimal path 
 The general solution strategy is to use dynamic programming to compute the minimal total time by evaluating all possible paths from the start to each waypoint, storing intermediate results to avoid redundant calculations, and backtracking to reconstruct the optimal path.
 
 - **Without Dynamic Programming (DP)**:  
-  A brute-force approach would evaluate all possible subsets of waypoints to visit or skip. For \( N \) waypoints, there are \( 2^N \) possible subsets, and evaluating each subset takes \( O(N) \) time. This results in a total complexity of \( O(N \times 2^N) \), which is **exponential** and impractical for \( N \geq 20 \).
+  A brute-force approach would evaluate all possible subsets of waypoints to visit or skip. For `N` waypoints, there are `2^N` possible subsets, and evaluating each subset takes `O(N)` time. This results in a total complexity of  `O(N * 2^N)`, which is **exponential** and impractical for large `N`.
 
 - **With Dynamic Programming (DP)**:  
-  The DP approach, which is implemented in this project, reduces the complexity to \( O(N^2) \) by avoiding redundant calculations. For each waypoint \( i \), it checks all previous waypoints \( j < i \) to compute the minimal time. This makes the algorithm feasible for \( N \leq 1000 \).
+  The DP approach, which is implemented in this project, reduces the complexity to `O(N^2` by avoiding redundant calculations. For each waypoint `i`, it checks all previous waypoints `j < i` to compute the minimal time. This makes the algorithm feasible for large `N`.
 
 ## Usage
 
@@ -74,7 +72,7 @@ For each test case, output:
 1. The minimal total time (in seconds) rounded to 3 decimal places.
 2. The optimal path as a sequence of visited waypoint indices (starting from 0 for the origin and ending at N+1 for the terminal point).
 
-## Example Inputs and Solutions
+## Examples
 
 Several example inputs and their solutions are provided in the `examples` folder. These examples span problems of small (a few waypoints), medium (less than ~100 waypoints), and large (over ~100 waypoints) size. 
 

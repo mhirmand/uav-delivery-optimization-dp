@@ -5,7 +5,7 @@ This repository contains a C++ implementation for the optimization of a delivery
 ## Table of Contents
 
 - [Overview](#Problem-Overview)
-- [Algorithm and Time Complexity](#Algorithm-and-Time-Complexity-Analysis)
+- [Algorithm and Time Complexity](#Algorithm-and-Time-Complexity)
 - [Usage](#Usage)
 - [Examples](#Examples)
 

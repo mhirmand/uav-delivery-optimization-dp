@@ -49,6 +49,7 @@ int main(int argc, char* argv[]) {
   const std::string input_file = cfg.input_path;
   const std::string output_file = cfg.output_path;
 
-  auto uav = DeliveryUAV(cfg.uav_Speed, cfg.wait_Time);
-  return uav.solveCase("input.txt", "output.txt");
+  // Use the fully qualified name for DeliveryUAV
+  auto uav = DeliveryUAV::DeliveryUAV(cfg.uav_Speed, cfg.wait_Time);
+  return uav.solveCase(cfg.input_path, cfg.output_path);
 }

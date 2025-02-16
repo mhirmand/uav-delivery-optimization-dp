@@ -4,6 +4,7 @@
 #include <iomanip>
 #include <iostream>
 #include <limits>
+#include <chrono>
 
 WayPoint::WayPoint(double x_, double y_, double p_) : x(x_), y(y_), penalty(p_) {}
 
@@ -67,9 +68,15 @@ int DeliveryUAV::solveCase(
   const std::string& input_file_name,
   const std::string& output_file_name)
 {
-  // ---------------------------
-  // File Initialization Section
-  // ---------------------------
+
+  // ----------------------
+  // Satrt Timer
+  // ----------------------
+	auto start_time = std::chrono::high_resolution_clock::now();
+
+  // ----------------------
+  // File Initialization 
+  // ----------------------
   std::ifstream input_file(input_file_name);
   if (!input_file.is_open()) {
     std::cerr << "Error opening input file: " << input_file_name << '\n';
@@ -83,22 +90,23 @@ int DeliveryUAV::solveCase(
     return EXIT_FAILURE;
   }
 
-  // -------------------------
-  // Input Validation Section
-  // -------------------------
-  int n = 0;
-  input_file >> n;
-  if (n < 0) {
-    std::cerr << "Invalid input format. Number of waypoints ("
-      << n << ") must be non-negative.\n";
-    return EXIT_FAILURE;
-  }
-
-  // ----------------------------------
-  // Waypoint Data Loading Section
-  // ----------------------------------
+  // ----------------------
+  // Waypoint Data Loading 
+  // ----------------------
   double start_x, start_y, term_x, term_y;
   input_file >> start_x >> start_y >> term_x >> term_y;
+
+
+	// ----------------------
+  // Input Validation 
+  // ----------------------
+	int n = 0;
+	input_file >> n;
+	if (n < 0) {
+		std::cerr << "Invalid input format. Number of waypoints ("
+			<< n << ") must be non-negative.\n";
+		return EXIT_FAILURE;
+	}
 
   // Initialize waypoints with start and terminal points
   std::vector<WayPoint> waypoints;
@@ -113,30 +121,36 @@ int DeliveryUAV::solveCase(
   }
   waypoints.emplace_back(term_x, term_y, 0.0);  // Terminal point (index N+1)
 
-  // -------------------------------
-  // Penalty Precomputation Section
-  // -------------------------------
+  // ----------------------
+  // Penalty Precomputation
+  // ----------------------
   std::vector<double> prefix(n + 2, 0.0);  // prefix[0] = 0 (start point)
   for (int i = 1; i <= n; ++i) {
     prefix[i] = prefix[i - 1] + waypoints[i].penalty;
   }
   prefix[n + 1] = prefix[n];  // Terminal inherits previous sum (no penalty)
 
-  // --------------------------
+  // ----------------------
   // Core Algorithm Execution
-  // --------------------------
+  // ----------------------
   std::vector<int> optimal_path;
   const double result = DeliveryUAV::solve(waypoints, prefix, optimal_path);
 
+ // ----------------------
+ // Stop timing
+ // ----------------------
+  auto end_time = std::chrono::high_resolution_clock::now();
+  auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
+
   // ----------------------
-  // Result Output Section
+  // Result Output
   // ----------------------
+  output_file << "Execution Time: " << duration.count() << " ms\n";
   output_file << "Minimum UAV time: " << std::fixed << std::setprecision(3) << result << '\n';
-  output_file << "Optimal waypoint indicies: ";
-  for (int idx : optimal_path) {
-    output_file << idx << " ";
+  output_file << "Optimal waypoint indicies: \n";
+  for (int idx = 1; idx < optimal_path.size() - 1; idx++) {
+    output_file << optimal_path[idx] << " \n";
   }
-  output_file << "\n";
 
   // -------------------
   // Resource Cleanup

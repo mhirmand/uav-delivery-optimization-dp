@@ -60,9 +60,9 @@ Run with `uav_speed` = 20 and `wait_time` = 3
 
 ### Input File Format
 The input is a txt file containing a set of waypoint coordinates and their penalties in along with the coordinates of the start and end of the course. It must be in the following format:  
-- **1st Line**: Integer N, the number of waypoints.
-- **2nd Line**: X, Y of the starting point.
-- **3rd Line**: Y, Y of the end point.
+- **1st Line**: X, Y of the starting point.
+- **2nd Line**: Y, Y of the end point.
+- **3rd Line**: Integer N, the number of waypoints.
 - **Next N Lines**: Each line contains three integers: X, Y, and P, where:
   - (X, Y) are the coordinates of the waypoint.
   - P is the penalty for skipping the waypoint.
@@ -70,7 +70,7 @@ The input is a txt file containing a set of waypoint coordinates and their penal
 ### Output Format
 For each test case, output:
 1. The minimal total time (in seconds) rounded to 3 decimal places.
-2. The optimal path as a sequence of visited waypoint indices (starting from 0 for the origin and ending at N+1 for the terminal point).
+2. The optimal path as a sequence of visited waypoint indices. Start and end points are not included in the list. It assumed that waypoint indicies range from 1 to N.
 
 ## Examples
 

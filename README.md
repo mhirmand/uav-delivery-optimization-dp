@@ -74,7 +74,7 @@ For each test case, output:
 
 ## Examples
 
-Several example inputs and their solutions are provided in the `examples` folder. These examples span problems of small (a few waypoints), medium (less than ~100 waypoints), and large (over ~100 waypoints) size. 
+Several example inputs and their solutions (obtained using the default UAV speed and wait times) are provided in the `examples` folder. These examples span problems of small (a few waypoints), medium (less than ~100 waypoints), and large (over ~100 waypoints) size. 
 
 
 

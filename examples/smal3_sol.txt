@@ -1,0 +1,5 @@
+Execution Time: 1 ms
+Minimum UAV time: 110.711
+Optimal waypoint indicies: 
+1 
+2 

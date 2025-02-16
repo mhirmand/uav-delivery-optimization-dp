@@ -34,7 +34,7 @@ The general solution strategy is to use dynamic programming to compute the minim
   A brute-force approach would evaluate all possible subsets of waypoints to visit or skip. For `N` waypoints, there are `2^N` possible subsets, and evaluating each subset takes `O(N)` time. This results in a total complexity of  `O(N * 2^N)`, which is **exponential** and impractical for large `N`.
 
 - **With Dynamic Programming (DP)**:  
-  The DP approach, which is implemented in this project, reduces the complexity to `O(N^2` by avoiding redundant calculations. For each waypoint `i`, it checks all previous waypoints `j < i` to compute the minimal time. This makes the algorithm feasible for large `N`.
+  The DP approach, which is implemented in this project, reduces the complexity to `O(N^2)` by avoiding redundant calculations. For each waypoint `i`, it checks all previous waypoints `j < i` to compute the minimal time. This makes the algorithm feasible for large `N`.
 
 ## Usage
 

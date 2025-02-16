@@ -22,7 +22,7 @@ manoeuvring to them. Given a description of a course, the goal is to determine U
 2. **No Backtracking**: Once a waypoint is skipped, it cannot be revisited.
 3. **Straight-Line Movement**: The UAV moves in straight lines between waypoints and can turn instantly during stops.
 4. **Unique Waypoints**: No two waypoints share the same coordinates.
-5. **Waypoints not hit Accidentally**:The UAV it is not in danger of hitting a waypoint accidentally too soon by flying over it.
+5. **Waypoints not hit Accidentally**: The UAV it is not in danger of hitting a waypoint accidentally too soon by flying over it.
 
 ### Objective
 Implement a C++ solution to compute the minimal total time and the optimal path for each test case. The solution should be able to solve problems with thousands of waypoints within a reasonable time.
@@ -76,5 +76,32 @@ For each test case, output:
 
 Several example inputs and their solutions (obtained using the default UAV speed and wait times) are provided in the `examples` folder. These examples span problems of small (a few waypoints), medium (less than ~100 waypoints), and large (over ~100 waypoints) size. 
 
+For the small input #3 `small2.txt`, we have:
+```bash
+0 0
+100 100
+3
+30 30 90
+60 60 80
+10 90 10
+```
+The starting point is `(0,0)` and the end point is `(100, 100)`. There are 3 waypoints to be visited by the UAV. The solution output is:
 
+```bash
+Execution Time: 1 ms
+Minimum UAV time: 110.711
+Optimal waypoint indicies: 
+1 
+2 
+```
+which shows that the optimal path includes:
+- starting at (0, 0)
+- visiting waypoints 1 and 2 (waiting for 10 s there and incure no penalty)
+- traveling directly to the end point (100, 100) from waypoint #2 (i.e., skipping waypoint 3 by incuring its penalty of 10 s)
+
+The total time optimal time is `110.711 s` which includes travel time, wait times, and penalties. The python script `plot_results.py` included in this repository can be used to visualize the optimal UAV path:
+
+<div align="center">
+<img src="https://github.com/user-attachments/assets/872bb38e-b121-4aad-a7e6-40e49b029e79" width="500" height="500">
+</div>
 
